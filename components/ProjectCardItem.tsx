@@ -59,6 +59,7 @@ export const ProjectCardItem: React.FC<ProjectCardItemProps> = ({ item, viewMode
                 fill
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 70vw"
+                priority
               />
             </div>
           )}

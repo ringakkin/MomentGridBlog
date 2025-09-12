@@ -30,7 +30,13 @@ export const PortfolioGrid: React.FC<PortfolioGridProps> = ({
         <div 
           key={item.id}
           data-flip-id={item.id}
-          className="w-full flex flex-col lg:flex-row lg:items-end gap-2 lg:gap-4 cursor-pointer"
+          className={`
+            w-full cursor-pointer
+            ${viewMode === 'grid' 
+              ? 'flex flex-col lg:flex-row lg:items-end gap-2 lg:gap-4' 
+              : ''
+            }
+          `}
           style={{ opacity: 1, width: 'auto' }}
         >
           <PortfolioItemComponent 

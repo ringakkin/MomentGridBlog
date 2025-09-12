@@ -62,6 +62,7 @@ export const SpecialGridItem: React.FC<SpecialGridItemProps> = ({ item, viewMode
                 fill
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 sizes="(max-width: 768px) 50vw, 35vw"
+                priority={index === 0}
               />
             </div>
           ))}
