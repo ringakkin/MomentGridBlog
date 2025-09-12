@@ -51,16 +51,10 @@ next-env.d.ts
 ehthumbs.db
 Thumbs.db
 
-# Package manager lock files (if using pnpm, ignore npm lock)
-package-lock.json
-
 # Temporary files and caches
 *.tmp
 *.temp
 .cache/
-
-# HTML files that might be accidentally saved from browsers
-*.html
 
 # Log files
 *.log
