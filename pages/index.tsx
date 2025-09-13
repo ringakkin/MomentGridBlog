@@ -104,7 +104,7 @@ export default function Home() {
       <main className="ml-0 md:ml-[340px] pl-8 pr-8 md:pl-0 relative flex-1 flex-grow-0 pb-8 md:pb-14">
         <div className="flex flex-col">
           <h1 className="flex-1 flex-grow-0 p-0 m-0 text-charcoal text-sm leading-6 max-w-md mt-32 md:mt-24 mb-4">
-            Hi, my name is Noah Buscher. I am a software engineer and designer living in Denver. I
+            Hi, my name is Lin Hsüeh-chin. I am a software engineer and designer living in Nanchang. I
             work remotely and travel often, bringing my camera along with me. Sometimes I write.
             Here's what I'm up to <a className="underline" href="/now">now</a>.
           </h1>

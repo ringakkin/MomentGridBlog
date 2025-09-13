@@ -3,6 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import matter from "gray-matter";
 import ProjectLayout from "../../layouts/Project";
+import Sidebar from "../../components/Sidebar";
 import { renderMarkdownToHTML } from "../../utils/markdown";
 import type { Project } from "../../layouts/Project";
 
@@ -79,12 +80,15 @@ const Project = ({
   project: Project;
   renderedProjectContent: string;
 }) => (
-  <main className="mx-10 sm:mx-0 my-10">
-    <ProjectLayout
-      project={project}
-      renderedProjectContent={renderedProjectContent}
-    />
-  </main>
+  <div className="min-h-screen flex flex-col">
+    <Sidebar />
+    <main className="ml-0 md:ml-[340px] pl-8 pr-8 md:pl-0 my-10">
+      <ProjectLayout
+        project={project}
+        renderedProjectContent={renderedProjectContent}
+      />
+    </main>
+  </div>
 );
 
 export default Project;

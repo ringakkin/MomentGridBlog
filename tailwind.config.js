@@ -13,6 +13,7 @@ module.exports = {
         'gray-dark': '#ADADAD',
         'gray-light': '#E5E5E5',
         'bg-light': '#FBFBFB',
+        'bg-white': '#FFFFFF',
       },
       fontFamily: {
         'sans': ['aktiv-grotesk', 'ui-sans-serif', 'system-ui', 'sans-serif'],

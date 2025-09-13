@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Aktiv Grotesk Font - 本地字体文件 */
+@font-face {
+  font-family: "aktiv-grotesk";
+  src: url("/fonts/aktiv-grotesk.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+}
+
 /* 全局样式，匹配 Noah Buscher 网站 */
 html {
   line-height: 1.5;
@@ -16,7 +26,7 @@ html {
 body {
   margin: 0;
   line-height: inherit;
-  background-color: #FBFBFB;
+  background-color: #FFFFFF;
   color: #232323;
 }
 
