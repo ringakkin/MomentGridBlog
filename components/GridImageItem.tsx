@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { PortfolioItem } from '../data/portfolio';
 
 interface GridImageItemProps {
@@ -8,15 +9,23 @@ interface GridImageItemProps {
 }
 
 export const GridImageItem: React.FC<GridImageItemProps> = ({ item, viewMode }) => {
-  const linkProps = item.href ? { href: item.href } : {};
-  const Component = item.href ? 'a' : 'div';
+  // 为照片类型生成动态链接
+  const getItemLink = () => {
+    if (item.type === 'photo') {
+      return `/photos/${item.id}`;
+    }
+    return item.href || '#';
+  };
+
+  const itemLink = getItemLink();
 
   if (viewMode === 'grid') {
     return (
       <div className="w-full flex flex-col lg:flex-row lg:items-end gap-2 lg:gap-4 cursor-pointer">
-        <Component 
+        <Link 
+          href={itemLink}
+          prefetch={true}
           className="cursor-pointer text-xs rounded-[8px] h-full overflow-hidden relative transition-all w-full ease-in-out aspect-square" 
-          {...linkProps}
         >
           <div className="w-full h-full relative grid grid-cols-2 gap-1 overflow-hidden rounded-[8px]">
             {item.images.slice(0, 4).map((image, index) => (
@@ -27,11 +36,13 @@ export const GridImageItem: React.FC<GridImageItemProps> = ({ item, viewMode }) 
                   fill
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   sizes="(max-width: 768px) 25vw, (max-width: 1024px) 12.5vw, 10vw"
+                  priority={false}
+                  loading="lazy"
                 />
               </div>
             ))}
           </div>
-        </Component>
+        </Link>
       </div>
     );
   }

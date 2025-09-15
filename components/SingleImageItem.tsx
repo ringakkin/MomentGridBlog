@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { PortfolioItem } from '../data/portfolio';
 
 interface SingleImageItemProps {
@@ -8,15 +9,23 @@ interface SingleImageItemProps {
 }
 
 export const SingleImageItem: React.FC<SingleImageItemProps> = ({ item, viewMode }) => {
-  const linkProps = item.href ? { href: item.href } : {};
-  const Component = item.href ? 'a' : 'div';
+  // 为照片类型生成动态链接
+  const getItemLink = () => {
+    if (item.type === 'photo') {
+      return `/photos/${item.id}`;
+    }
+    return item.href || '#';
+  };
+
+  const itemLink = getItemLink();
 
   if (viewMode === 'grid') {
     return (
       <div className="w-full flex flex-col lg:flex-row lg:items-end gap-2 lg:gap-4 cursor-pointer">
-        <Component 
+        <Link 
+          href={itemLink}
+          prefetch={true}
           className="cursor-pointer text-xs rounded-[8px] h-full overflow-hidden relative group transition-all w-full ease-in-out aspect-square" 
-          {...linkProps}
         >
           <div className="w-full h-full relative overflow-hidden rounded-[8px]">
             <Image
@@ -25,9 +34,11 @@ export const SingleImageItem: React.FC<SingleImageItemProps> = ({ item, viewMode
               fill
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
               sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
+              priority={false}
+              loading="lazy"
             />
           </div>
-        </Component>
+        </Link>
       </div>
     );
   }

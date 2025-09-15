@@ -70,6 +70,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Sunset at the dunes.',
     date: '2024-03-15',
     location: 'Glamis, California',
+    href: '/photos/glamis-dunes',
     images: [
       '/images/image010.webp',
       '/images/image011.webp',
@@ -84,7 +85,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Radio Install in a Porsche Boxster',
     description: 'Installing an aftermarket headunit in a Porsche 987.2 with the Sound Package Plus (SPP) option.',
     date: '2023-06-27',
-    href: '/posts/987-headunit-install',
+    href: '#',
     images: [],
     gridLayout: {
       type: 'card',
@@ -101,6 +102,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Hike through Ladder Trail.',
     date: '2024-04-22',
     location: 'Mecca Hills, California',
+    href: '/photos/ladder-trail',
     images: [
       '/images/image014.webp',
       '/images/image015.webp',
@@ -129,7 +131,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Zed Public Beta',
     description: 'My first impressions with Zed\'s public beta - a native, minimal code editor focused on multiplayer.',
     date: '2023-03-19',
-    href: '/posts/zed',
+    href: '#',
     images: [],
     gridLayout: {
       type: 'card',
@@ -156,7 +158,7 @@ export const portfolioItems: PortfolioItem[] = [
     title: 'Create a Markdown Portfolio with Next.js',
     description: 'How to create a markdown-based portfolio site (or blog) for fun and profit with Next.js, Typescript, and Tailwind.',
     date: '2023-03-06',
-    href: '/posts/create-markdown-portfolio-next-js',
+    href: '#',
     images: [],
     gridLayout: {
       type: 'card',
