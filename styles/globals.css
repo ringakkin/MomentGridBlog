@@ -108,6 +108,8 @@ body {
 [data-flip-id] {
   transform-origin: top left;
   will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 .transform-gpu {

@@ -16,18 +16,15 @@ export default function Home() {
     return item.type === activeFilter;
   });
 
-  // 暂时注释掉复杂的FLIP动画
-  // const { containerRef, captureFirst } = useFlipAnimation(
-  //   isTransitioning,
-  //   () => {
-  //     console.log('Portfolio animation completed');
-  //     setIsTransitioning(false);
-  //   },
-  //   350
-  // );
-  
-  // 使用简单的ref
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  // 重新启用FLIP动画
+  const { containerRef, captureFirst } = useFlipAnimation(
+    isTransitioning,
+    () => {
+      console.log('Portfolio animation completed');
+      setIsTransitioning(false);
+    },
+    600 // 稍微增加动画持续时间，让动画更流畅
+  );
 
   const handleFilterChange = (filter: 'all' | 'photo' | 'post' | 'project') => {
     if (isTransitioning || activeFilter === filter) {
@@ -59,20 +56,22 @@ export default function Home() {
     console.log('=== Portfolio view mode change ===');
     console.log('Current view mode:', viewMode);
     
-    // 防止重复点击
-    setIsTransitioning(true);
+    // Step 1: First - 记录当前元素位置
+    console.log('📸 Capturing first positions...');
+    captureFirst();
     
-    // 立即切换视图
+    // Step 2: 立即切换视图模式（这会改变布局）
     setViewMode(prev => {
       const newMode = prev === 'grid' ? 'detailed' : 'grid';
       console.log('📝 Switching portfolio to:', newMode);
       return newMode;
     });
     
-    // 短暂延迟后允许下次点击
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 200);
+    // Step 3: 在下一个渲染帧触发FLIP动画
+    requestAnimationFrame(() => {
+      console.log('🎬 Starting FLIP animation...');
+      setIsTransitioning(true);
+    });
   };
 
   // 键盘快捷键

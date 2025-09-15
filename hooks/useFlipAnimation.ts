@@ -56,6 +56,12 @@ export const useFlipAnimation = (
 
     console.log('✅ === FLIP Animation Started ===');
     
+    // 保存原始样式状态
+    const originalOverflowX = document.body.style.overflowX;
+    
+    // 只防止水平滚动条，保持竖向滚动正常工作
+    document.body.style.overflowX = 'hidden';
+    
     const elements = containerRef.current.querySelectorAll('[data-flip-id]');
     console.log(`Found ${elements.length} elements to animate`);
     
@@ -94,29 +100,39 @@ export const useFlipAnimation = (
         delta: { x: Math.round(deltaX), y: Math.round(deltaY), scaleX: deltaW.toFixed(2), scaleY: deltaH.toFixed(2) }
       });
 
-      // 对于视图模式切换，我们需要更宽松的条件
-      // 即使位置相同，尺寸变化也应该触发动画
-      const needsAnimation = true; // 强制所有元素都执行动画
+      // 对于视图模式切换，只要有变化就执行动画
+      // 特别是位置和尺寸的显著变化
+      const hasPositionChange = Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10;
+      const hasSizeChange = Math.abs(deltaW - 1) > 0.1 || Math.abs(deltaH - 1) > 0.1;
+      const needsAnimation = hasPositionChange || hasSizeChange;
 
       if (!needsAnimation) {
         console.log(`❌ Skipping animation for ${id} - no significant change`);
         return;
       }
 
-      console.log(`✓ Will animate ${id} - significant change detected`);
+      console.log(`✅ Will animate ${id} - significant change detected`);
 
-      // 立即应用初始变换
+      // 限制过大的缩放比例，避免视觉上的突兀
+      const maxScale = 3;
+      const minScale = 0.3;
+      const clampedScaleX = Math.max(minScale, Math.min(maxScale, deltaW));
+      const clampedScaleY = Math.max(minScale, Math.min(maxScale, deltaH));
+
+      // 立即应用初始变换 - 使用3D transform强制GPU加速
       htmlElement.style.transformOrigin = 'top left';
-      htmlElement.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${deltaW}, ${deltaH})`;
+      htmlElement.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale3d(${clampedScaleX}, ${clampedScaleY}, 1)`;
       htmlElement.style.transition = 'none';
       htmlElement.style.willChange = 'transform';
       htmlElement.style.zIndex = '10';
+      htmlElement.style.backfaceVisibility = 'hidden';
 
       // 准备播放动画
       animations.push(() => {
-        console.log(`Animating ${id}...`);
-        htmlElement.style.transition = `transform ${duration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
-        htmlElement.style.transform = 'translate(0, 0) scale(1, 1)';
+        console.log(`🎬 Animating ${id}...`);
+        // 使用更流畅的缓动曲线
+        htmlElement.style.transition = `transform ${duration}ms cubic-bezier(0.25, 0.1, 0.25, 1)`;
+        htmlElement.style.transform = 'translate3d(0, 0, 0) scale3d(1, 1, 1)';
       });
     });
 
@@ -126,28 +142,18 @@ export const useFlipAnimation = (
       
       // 使用双重requestAnimationFrame确保初始变换完全应用
       requestAnimationFrame(() => {
+        // 强制重排，确保初始transform生效
+        elements.forEach(el => el.getBoundingClientRect());
+        
         requestAnimationFrame(() => {
           console.log('Executing animations...');
           animations.forEach(animate => animate());
 
-          // 监听第一个元素的动画完成
-          const firstElement = elements[0] as HTMLElement;
-          const handleTransitionEnd = (e: TransitionEvent) => {
-            if (e.target === firstElement && e.propertyName === 'transform') {
-              console.log('Animation completed via transitionend');
-              firstElement.removeEventListener('transitionend', handleTransitionEnd);
-              cleanupAndComplete();
-            }
-          };
-
-          firstElement.addEventListener('transitionend', handleTransitionEnd);
-
-          // 备用完成机制
+          // 简化完成检测 - 使用固定延时而不是事件监听
           setTimeout(() => {
-            console.log('Animation completed via timeout backup');
-            firstElement.removeEventListener('transitionend', handleTransitionEnd);
+            console.log('Animation completed via timeout');
             cleanupAndComplete();
-          }, duration + 100);
+          }, duration + 50);
         });
       });
     } else {
@@ -165,7 +171,12 @@ export const useFlipAnimation = (
         htmlElement.style.transformOrigin = '';
         htmlElement.style.willChange = '';
         htmlElement.style.zIndex = '';
+        htmlElement.style.backfaceVisibility = '';
       });
+      
+      // 恢复水平滚动设置
+      document.body.style.overflowX = originalOverflowX;
+      
       onComplete?.();
     }
   }, [isAnimating, duration, onComplete]);
