@@ -9,23 +9,12 @@ interface PortfolioGridProps {
   containerRef?: React.RefObject<HTMLDivElement>;
 }
 
-export const PortfolioGrid: React.FC<PortfolioGridProps> = ({ 
+export const PortfolioGrid: React.FC<PortfolioGridProps> = React.memo(({ 
   items, 
   viewMode, 
   isTransitioning = false,
   containerRef
 }) => {
-  // 调试信息
-  React.useEffect(() => {
-    console.log('🎯 PortfolioGrid rendered:', {
-      itemsCount: items.length,
-      viewMode,
-      isTransitioning,
-      hasContainerRef: !!containerRef,
-      containerRefCurrent: !!containerRef?.current
-    });
-  }, [items.length, viewMode, isTransitioning, containerRef]);
-
   return (
     <div 
       ref={containerRef}
@@ -57,10 +46,6 @@ export const PortfolioGrid: React.FC<PortfolioGridProps> = ({
               : ''
             }
           `}
-          style={{ 
-            opacity: 1, 
-            width: 'auto'
-          }}
         >
           <PortfolioItemComponent 
             item={item} 
@@ -70,6 +55,6 @@ export const PortfolioGrid: React.FC<PortfolioGridProps> = ({
       ))}
     </div>
   );
-};
+});
 
 export default PortfolioGrid;

@@ -12,6 +12,13 @@
   font-stretch: normal;
 }
 
+/* 字体预加载优化 */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+}
+
 /* 全局样式，匹配 Noah Buscher 网站 */
 html {
   line-height: 1.5;
@@ -30,66 +37,6 @@ body {
   color: #232323;
 }
 
-/* View Transition API 支持 */
-@supports (view-transition-name: none) {
-  /* 启用视图过渡 */
-  html {
-    view-transition-name: auto;
-  }
-  
-  /* 自定义过渡动画 */
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation-duration: 0.6s;
-    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
-  }
-  
-  /* 特定元素的过渡名称 */
-  [style*="view-transition-name"] {
-    contain: layout style paint;
-  }
-}
-
-/* 后备动画（如果浏览器不支持 View Transition API） */
-@media (prefers-reduced-motion: no-preference) {
-  .layout-transition {
-    transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
-  }
-  
-  .layout-transition-enter {
-    opacity: 0;
-    transform: scale(0.95) translateY(20px);
-  }
-  
-  .layout-transition-enter-active {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-/* 自定义动画 */
-@keyframes slideInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes slideInScale {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 /* 自定义颜色类 */
 .text-charcoal {
   color: #232323;
@@ -99,42 +46,10 @@ body {
   color: #ADADAD;
 }
 
-/* 图片悬停效果 */
-.group:hover .group-hover\:scale-105 {
-  transform: scale(1.05);
-}
-
 /* FLIP动画优化 */
 [data-flip-id] {
   transform-origin: top left;
   will-change: transform;
   backface-visibility: hidden;
   perspective: 1000px;
-}
-
-.transform-gpu {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* 视图切换动画优化 */
-.view-transition {
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-}
-
-.view-transition-entering {
-  opacity: 0.85;
-  transform: translateY(8px) scale(0.98);
-}
-
-/* 图片渲染优化 */
-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-/* 响应式网格间距 */
-.gap-2 {
-  gap: 0.5rem;
 }

@@ -16,31 +16,20 @@ export default function Home() {
     return item.type === activeFilter;
   });
 
-  // 重新启用FLIP动画
+  // FLIP动画
   const { containerRef, captureFirst } = useFlipAnimation(
     isTransitioning,
-    () => {
-      console.log('Portfolio animation completed');
-      setIsTransitioning(false);
-    },
-    600 // 稍微增加动画持续时间，让动画更流畅
+    () => setIsTransitioning(false),
+    600
   );
 
   const handleFilterChange = (filter: 'all' | 'photo' | 'post' | 'project') => {
-    if (isTransitioning || activeFilter === filter) {
-      return;
-    }
+    if (isTransitioning || activeFilter === filter) return;
     
-    console.log('=== Portfolio filter change ===');
-    console.log('Changing filter to:', filter);
-    
-    // 立即设置过渡状态
     setIsTransitioning(true);
     
-    // 延迟状态变化
     requestAnimationFrame(() => {
       setActiveFilter(filter);
-      // 简单的延迟后重置状态
       setTimeout(() => {
         setIsTransitioning(false);
       }, 300);
@@ -48,28 +37,13 @@ export default function Home() {
   };
 
   const handleViewModeChange = () => {
-    if (isTransitioning) {
-      console.log('Already transitioning, ignoring click');
-      return;
-    }
+    if (isTransitioning) return;
     
-    console.log('=== Portfolio view mode change ===');
-    console.log('Current view mode:', viewMode);
-    
-    // Step 1: First - 记录当前元素位置
-    console.log('📸 Capturing first positions...');
     captureFirst();
     
-    // Step 2: 立即切换视图模式（这会改变布局）
-    setViewMode(prev => {
-      const newMode = prev === 'grid' ? 'detailed' : 'grid';
-      console.log('📝 Switching portfolio to:', newMode);
-      return newMode;
-    });
+    setViewMode(prev => prev === 'grid' ? 'detailed' : 'grid');
     
-    // Step 3: 在下一个渲染帧触发FLIP动画
     requestAnimationFrame(() => {
-      console.log('🎬 Starting FLIP animation...');
       setIsTransitioning(true);
     });
   };
@@ -105,8 +79,18 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Lin Hsüeh-chin</title>
+        <title>Lin Hsüeh-chin - Software Engineer & Designer</title>
+        <meta name="description" content="Lin Hsüeh-chin is a software engineer and designer living in Nanchang. I work remotely and travel often, bringing my camera along with me." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="Lin Hsüeh-chin" />
+        <meta property="og:title" content="Lin Hsüeh-chin - Software Engineer & Designer" />
+        <meta property="og:description" content="Lin Hsüeh-chin is a software engineer and designer living in Nanchang. I work remotely and travel often, bringing my camera along with me." />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/images/head.webp" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Lin Hsüeh-chin - Software Engineer & Designer" />
+        <meta name="twitter:description" content="Lin Hsüeh-chin is a software engineer and designer living in Nanchang. I work remotely and travel often, bringing my camera along with me." />
+        <link rel="canonical" href="https://momentgridblog.vercel.app/" />
       </Head>
       <div className="min-h-screen flex flex-col">
         <Sidebar />

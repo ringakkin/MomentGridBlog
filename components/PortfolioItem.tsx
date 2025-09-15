@@ -11,7 +11,7 @@ interface PortfolioItemProps {
   viewMode: 'grid' | 'detailed';
 }
 
-export const PortfolioItemComponent: React.FC<PortfolioItemProps> = ({ 
+export const PortfolioItemComponent: React.FC<PortfolioItemProps> = React.memo(({ 
   item, 
   viewMode
 }) => {
@@ -37,6 +37,6 @@ export const PortfolioItemComponent: React.FC<PortfolioItemProps> = ({
     default:
       return <SingleImageItem item={item} viewMode={viewMode} />;
   }
-};
+});
 
 export default PortfolioItemComponent;
