@@ -18,7 +18,6 @@ export default function Document() {
         <meta property="og:image" content="https://noahbuscher.com/social-image.jpg" />
         <meta name="twitter:image" content="https://noahbuscher.com/social-image.jpg" />
         <meta name="theme-color" content="#FFFFFF" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="alternate" type="application/atom+xml" title="noahbuscher.com" href="https://noahbuscher.com/feed.xml" />
         {/* 移除旧的 Inter 字体，统一使用 Typekit */}
       </Head>

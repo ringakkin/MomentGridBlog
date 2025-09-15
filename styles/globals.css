@@ -104,6 +104,34 @@ body {
   transform: scale(1.05);
 }
 
+/* FLIP动画优化 */
+[data-flip-id] {
+  transform-origin: top left;
+  will-change: transform;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* 视图切换动画优化 */
+.view-transition {
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.view-transition-entering {
+  opacity: 0.85;
+  transform: translateY(8px) scale(0.98);
+}
+
+/* 图片渲染优化 */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
 /* 响应式网格间距 */
 .gap-2 {
   gap: 0.5rem;

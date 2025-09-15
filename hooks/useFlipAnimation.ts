@@ -9,7 +9,7 @@ interface FlipState {
 export const useFlipAnimation = (
   isAnimating: boolean,
   onComplete?: () => void,
-  duration: number = 600
+  duration: number = 800
 ) => {
   const flipStatesRef = useRef<Map<string, DOMRect>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,12 +17,18 @@ export const useFlipAnimation = (
   // 记录所有元素的初始位置 (First)
   const captureFirst = () => {
     if (!containerRef.current) {
-      console.log('No container ref available');
+      console.log('❌ No container ref available for captureFirst');
       return;
     }
     
     const elements = containerRef.current.querySelectorAll('[data-flip-id]');
-    console.log(`Capturing positions for ${elements.length} elements`);
+    console.log(`📸 Capturing positions for ${elements.length} elements`);
+    
+    if (elements.length === 0) {
+      console.log('❌ No elements with data-flip-id found in container');
+      console.log('Container HTML:', containerRef.current.innerHTML.substring(0, 200) + '...');
+    }
+    
     flipStatesRef.current.clear();
     
     elements.forEach((element) => {
@@ -30,19 +36,25 @@ export const useFlipAnimation = (
       if (id) {
         const rect = element.getBoundingClientRect();
         flipStatesRef.current.set(id, rect);
-        console.log(`Captured ${id}:`, { x: rect.left, y: rect.top, w: rect.width, h: rect.height });
+        console.log(`✅ Captured ${id}:`, { x: Math.round(rect.left), y: Math.round(rect.top), w: Math.round(rect.width), h: Math.round(rect.height) });
+      } else {
+        console.log('❌ Element without data-flip-id found:', element);
       }
     });
+    
+    console.log(`📦 Total captured states: ${flipStatesRef.current.size}`);
   };
 
   // 执行FLIP动画
   useLayoutEffect(() => {
+    console.log('🔄 useLayoutEffect triggered:', { isAnimating, hasContainer: !!containerRef.current });
+    
     if (!isAnimating || !containerRef.current) {
-      console.log('Not animating or no container:', { isAnimating, hasContainer: !!containerRef.current });
+      console.log('❌ Not animating or no container:', { isAnimating, hasContainer: !!containerRef.current });
       return;
     }
 
-    console.log('=== FLIP Animation Started ===');
+    console.log('✅ === FLIP Animation Started ===');
     
     const elements = containerRef.current.querySelectorAll('[data-flip-id]');
     console.log(`Found ${elements.length} elements to animate`);
@@ -82,12 +94,12 @@ export const useFlipAnimation = (
         delta: { x: Math.round(deltaX), y: Math.round(deltaY), scaleX: deltaW.toFixed(2), scaleY: deltaH.toFixed(2) }
       });
 
-      // 检查是否需要动画（更宽松的条件）
-      const needsAnimation = Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10 || 
-                            Math.abs(deltaW - 1) > 0.1 || Math.abs(deltaH - 1) > 0.1;
+      // 对于视图模式切换，我们需要更宽松的条件
+      // 即使位置相同，尺寸变化也应该触发动画
+      const needsAnimation = true; // 强制所有元素都执行动画
 
       if (!needsAnimation) {
-        console.log(`Skipping animation for ${id} - no significant change`);
+        console.log(`❌ Skipping animation for ${id} - no significant change`);
         return;
       }
 
@@ -98,11 +110,12 @@ export const useFlipAnimation = (
       htmlElement.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${deltaW}, ${deltaH})`;
       htmlElement.style.transition = 'none';
       htmlElement.style.willChange = 'transform';
+      htmlElement.style.zIndex = '10';
 
       // 准备播放动画
       animations.push(() => {
         console.log(`Animating ${id}...`);
-        htmlElement.style.transition = `transform ${duration}ms cubic-bezier(0.4, 0.0, 0.2, 1)`;
+        htmlElement.style.transition = `transform ${duration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
         htmlElement.style.transform = 'translate(0, 0) scale(1, 1)';
       });
     });
@@ -134,7 +147,7 @@ export const useFlipAnimation = (
             console.log('Animation completed via timeout backup');
             firstElement.removeEventListener('transitionend', handleTransitionEnd);
             cleanupAndComplete();
-          }, duration + 50);
+          }, duration + 100);
         });
       });
     } else {
@@ -151,6 +164,7 @@ export const useFlipAnimation = (
         htmlElement.style.transform = '';
         htmlElement.style.transformOrigin = '';
         htmlElement.style.willChange = '';
+        htmlElement.style.zIndex = '';
       });
       onComplete?.();
     }

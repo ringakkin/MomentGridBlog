@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Head from "next/head";
 import Sidebar from "../components/Sidebar";
 import { PortfolioGrid } from "../components/PortfolioGrid";
 import { portfolioItems } from "../data/portfolio";
@@ -15,14 +16,18 @@ export default function Home() {
     return item.type === activeFilter;
   });
 
-  const { containerRef, captureFirst } = useFlipAnimation(
-    isTransitioning,
-    () => {
-      console.log('Portfolio animation completed');
-      setIsTransitioning(false);
-    },
-    1000 // 动画持续时间
-  );
+  // 暂时注释掉复杂的FLIP动画
+  // const { containerRef, captureFirst } = useFlipAnimation(
+  //   isTransitioning,
+  //   () => {
+  //     console.log('Portfolio animation completed');
+  //     setIsTransitioning(false);
+  //   },
+  //   350
+  // );
+  
+  // 使用简单的ref
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const handleFilterChange = (filter: 'all' | 'photo' | 'post' | 'project') => {
     if (isTransitioning || activeFilter === filter) {
@@ -35,12 +40,13 @@ export default function Home() {
     // 立即设置过渡状态
     setIsTransitioning(true);
     
-    // First - 记录当前元素位置
-    captureFirst();
-    
     // 延迟状态变化
     requestAnimationFrame(() => {
       setActiveFilter(filter);
+      // 简单的延迟后重置状态
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 300);
     });
   };
 
@@ -53,21 +59,20 @@ export default function Home() {
     console.log('=== Portfolio view mode change ===');
     console.log('Current view mode:', viewMode);
     
-    // 立即设置过渡状态，防止重复点击
+    // 防止重复点击
     setIsTransitioning(true);
     
-    // First - 记录当前元素位置
-    captureFirst();
-    
-    // 延迟状态变化，但更短的延迟
-    requestAnimationFrame(() => {
-      console.log('Changing portfolio state...');
-      setViewMode(prev => {
-        const newMode = prev === 'grid' ? 'detailed' : 'grid';
-        console.log('Switching portfolio to:', newMode);
-        return newMode;
-      });
+    // 立即切换视图
+    setViewMode(prev => {
+      const newMode = prev === 'grid' ? 'detailed' : 'grid';
+      console.log('📝 Switching portfolio to:', newMode);
+      return newMode;
     });
+    
+    // 短暂延迟后允许下次点击
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 200);
   };
 
   // 键盘快捷键
@@ -99,9 +104,14 @@ export default function Home() {
   }, [isTransitioning, activeFilter, viewMode]);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Sidebar />
-      <main className="ml-0 md:ml-[340px] pl-8 pr-8 md:pl-0 relative flex-1 flex-grow-0 pb-8 md:pb-14">
+    <>
+      <Head>
+        <title>Lin Hsüeh-chin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <div className="min-h-screen flex flex-col">
+        <Sidebar />
+        <main className="ml-0 md:ml-[340px] pl-8 pr-8 md:pl-0 relative flex-1 flex-grow-0 pb-8 md:pb-14">
         <div className="flex flex-col">
           <h1 className="flex-1 flex-grow-0 p-0 m-0 text-charcoal text-sm leading-6 max-w-md mt-32 md:mt-24 mb-4">
             Hi, my name is Lin Hsüeh-chin. I am a software engineer and designer living in Nanchang. I
@@ -207,6 +217,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </>
   );
 }
