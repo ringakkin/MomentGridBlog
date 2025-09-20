@@ -1,5 +1,6 @@
 import React from 'react';
 import { PortfolioItem } from '../data/portfolio';
+import { formatDate } from '../utils/helpers';
 
 interface PostCardItemProps {
   item: PortfolioItem;
@@ -16,22 +17,13 @@ export const PostCardItem: React.FC<PostCardItemProps> = ({ item, viewMode }) =>
   // 在网格视图中显示卡片
   if (viewMode === 'grid') {
     return (
-      <div className="w-full flex flex-col lg:flex-row lg:items-end gap-2 lg:gap-4 cursor-pointer">
-        <a 
-          className="cursor-pointer text-xs rounded-[8px] h-full overflow-hidden relative group transition-all w-full ease-in-out aspect-square min-h-[170px]" 
-          href={item.href}
-          style={{ 
-            backgroundColor: gridLayout.backgroundColor || '#F4EFE4',
-          }}
-          onMouseEnter={(e) => {
-            if (gridLayout.backgroundColor === '#F4EFE4') {
-              e.currentTarget.style.backgroundColor = '#E5DFD3';
-            }
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = gridLayout.backgroundColor || '#F4EFE4';
-          }}
-        >
+      <a 
+        className="cursor-pointer text-xs rounded-[8px] h-full overflow-hidden relative group transition-all w-full ease-in-out aspect-square min-h-[170px] hover:brightness-95" 
+        href={item.href}
+        style={{ 
+          backgroundColor: gridLayout.backgroundColor || '#F4EFE4',
+        }}
+      >
           <div className="p-4 relative flex flex-col gap-3 h-[100%] justify-end ease-in-out transition-all">
             <span className="absolute left-4 top-4 text-charcoal leading-none">
               {gridLayout.cardContent.category}
@@ -49,7 +41,6 @@ export const PostCardItem: React.FC<PostCardItemProps> = ({ item, viewMode }) =>
             </div>
           </div>
         </a>
-      </div>
     );
   }
 
@@ -94,16 +85,6 @@ export const PostCardItem: React.FC<PostCardItemProps> = ({ item, viewMode }) =>
       </div>
     </div>
   );
-};
-
-// 格式化日期的辅助函数
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
 };
 
 export default PostCardItem;

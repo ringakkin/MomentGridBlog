@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PortfolioItem } from '../data/portfolio';
+import { formatDate, getItemLink, SHARED_STYLES } from '../utils/helpers';
 
 interface SingleImageItemProps {
   item: PortfolioItem;
@@ -9,24 +10,15 @@ interface SingleImageItemProps {
 }
 
 export const SingleImageItem: React.FC<SingleImageItemProps> = ({ item, viewMode }) => {
-  // 为照片类型生成动态链接
-  const getItemLink = () => {
-    if (item.type === 'photo') {
-      return `/photos/${item.id}`;
-    }
-    return item.href || '#';
-  };
-
-  const itemLink = getItemLink();
+  const itemLink = getItemLink(item, item.href);
 
   if (viewMode === 'grid') {
     return (
-      <div className="w-full flex flex-col lg:flex-row lg:items-end gap-2 lg:gap-4 cursor-pointer">
-        <Link 
-          href={itemLink}
-          prefetch={true}
-          className="cursor-pointer text-xs rounded-[8px] h-full overflow-hidden relative group transition-all w-full ease-in-out aspect-square" 
-        >
+      <Link 
+        href={itemLink}
+        prefetch={true}
+        className={SHARED_STYLES.gridItemLink}
+      >
           <div className="w-full h-full relative overflow-hidden rounded-[8px]">
             <Image
               alt={item.title}
@@ -39,7 +31,6 @@ export const SingleImageItem: React.FC<SingleImageItemProps> = ({ item, viewMode
             />
           </div>
         </Link>
-      </div>
     );
   }
 
@@ -81,16 +72,6 @@ export const SingleImageItem: React.FC<SingleImageItemProps> = ({ item, viewMode
       </div>
     </div>
   );
-};
-
-// 格式化日期的辅助函数
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
 };
 
 export default SingleImageItem;

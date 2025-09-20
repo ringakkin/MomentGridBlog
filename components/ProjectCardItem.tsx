@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { PortfolioItem } from '../data/portfolio';
+import { formatDate, SHARED_STYLES } from '../utils/helpers';
 
 interface ProjectCardItemProps {
   item: PortfolioItem;
@@ -11,11 +12,10 @@ export const ProjectCardItem: React.FC<ProjectCardItemProps> = ({ item, viewMode
   // 在网格视图中显示项目卡片
   if (viewMode === 'grid') {
     return (
-      <div className="w-full flex flex-col lg:flex-row lg:items-end gap-2 lg:gap-4 cursor-pointer">
-        <a 
-          className="cursor-pointer text-xs rounded-[8px] h-full overflow-hidden relative group transition-all w-full ease-in-out aspect-square" 
-          href={item.href}
-        >
+      <a 
+        className={SHARED_STYLES.gridItemLink}
+        href={item.href}
+      >
           <div className="w-full h-full relative flex items-center bg-charcoal">
             <div className="absolute top-0 left-0 bottom-0 right-0 bg-white/5 z-10"></div>
             {item.images[0] && (
@@ -41,7 +41,6 @@ export const ProjectCardItem: React.FC<ProjectCardItemProps> = ({ item, viewMode
             )}
           </div>
         </a>
-      </div>
     );
   }
 
@@ -104,16 +103,6 @@ export const ProjectCardItem: React.FC<ProjectCardItemProps> = ({ item, viewMode
       </div>
     </div>
   );
-};
-
-// 格式化日期的辅助函数
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
 };
 
 export default ProjectCardItem;

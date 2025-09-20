@@ -5,6 +5,7 @@ import Sidebar from "../../components/Sidebar";
 import OptimizedImage from "../../components/OptimizedImage";
 import { portfolioItems, PortfolioItem } from "../../data/portfolio";
 import { GetStaticProps, GetStaticPaths } from "next";
+import { formatDate } from "../../utils/helpers";
 
 interface PhotoDetailPageProps {
   photo: PortfolioItem;
@@ -41,15 +42,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 const PhotoDetailPage: React.FC<PhotoDetailPageProps> = ({ photo }) => {
-  // 格式化日期
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
 
   return (
     <>
